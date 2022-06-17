@@ -2,7 +2,6 @@ import { TextField } from "@mui/material";
 import React, { memo } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateEmployeeMutation } from "../api/api";
-import Header from "./header";
 import "styled-components/macro";
 import { Link } from "react-router-dom";
 import { MatButton, Toast } from ".";
@@ -27,7 +26,7 @@ const AddEmployeeFields = [
       value: true,
       message: "This field is required",
     },
-    placeholder: "Enter employee total sales",
+    placeholder: "Enter employee total sales in (₹)",
     className: "",
   },
   {
@@ -77,13 +76,13 @@ function AddEmployee() {
     <div className="grid p-6 gap-8">
       <Link
         to="/employees"
-        className="flex items-center gap-1 text-blue-600 hover:underline"
+        className="w-max flex items-center gap-1 text-blue-600 hover:underline"
       >
         <span>View all employees</span>
         <IoIosArrowRoundForward size={25} />
       </Link>
       <form
-        className="grid justify-center items-start gap-8 w-full sm:w-[500px]"
+        className="grid justify-center items-start gap-8 w-full sm:w-[600px]"
         css={`
           grid-template-columns: 1fr;
           @media (min-width: 768px) {
@@ -97,6 +96,7 @@ function AddEmployee() {
             <TextField
               key={field.name}
               placeholder={field.placeholder}
+              type={field.type}
               label={field.placeholder}
               className={`${field.class}`}
               error={errors[field.name]}

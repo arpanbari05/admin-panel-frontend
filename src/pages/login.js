@@ -80,8 +80,8 @@ function Login() {
       <p className="text-blue-500 text-xs md:text-sm bg-blue-100 rounded-lg py-4 m-0 sm:mb-8 sm:mt-4 flex items-center justify-center gap-2">
         <RiErrorWarningLine />
         Use email :{" "}
-        <span className="font-medium text-blue-700">demo@minimals.cc</span> /
-        password : <span className="font-medium text-blue-700">demo1234</span>
+        <span className="font-medium text-blue-700">demo@user.com</span> /
+        password : <span className="font-medium text-blue-700">test@123</span>
       </p>
       <form className="grid gap-8" onSubmit={handleSubmit(onLogin)}>
         {loginFields.map((field) => (
