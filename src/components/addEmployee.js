@@ -18,6 +18,7 @@ const AddEmployeeFields = [
     },
     placeholder: "Enter employee name",
     className: "",
+    autoFocus: "on",
   },
   {
     name: "totalSales",
@@ -51,6 +52,8 @@ function AddEmployee() {
   const {
     register,
     handleSubmit,
+    reset,
+    setFocus,
     formState: { errors },
   } = useForm();
 
@@ -60,6 +63,8 @@ function AddEmployee() {
   const toast = useToggle();
 
   const onSubmit = (data) => {
+    reset();
+    setFocus("name");
     createEmployee({ ...data }).then(() => {
       toast.handleOpen();
     });
@@ -100,6 +105,7 @@ function AddEmployee() {
               label={field.placeholder}
               className={`${field.class}`}
               error={errors[field.name]}
+              autoFocus={field.autoFocus}
               helperText={errors[field.name]?.message}
               {...register(field.name, {
                 required: {
