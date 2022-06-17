@@ -62,7 +62,7 @@ export function useEmployees(filters = {}) {
   return {
     isFetching,
     employees: filteredEmployees,
-    topEmployees: filteredEmployees.splice(0, 4),
+    topEmployees: filteredEmployees.slice(0, 4),
     refetch,
   };
 }
