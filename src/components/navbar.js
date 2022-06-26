@@ -7,6 +7,7 @@ import { ImUsers } from "react-icons/im";
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 import "styled-components/macro";
+import { useMe } from "../customHooks";
 
 function Navbar({ open, handleClose }) {
   const navLinks = [
@@ -65,7 +66,8 @@ function Navbar({ open, handleClose }) {
 }
 
 function NavProfile({ handleClose }) {
-  const { isFetching, data } = useGetMeQuery();
+  // const { isFetching, data } = useGetMeQuery();
+  const { isFetching, data } = useMe();
 
   return (
     <div className="flex justify-between items-center">

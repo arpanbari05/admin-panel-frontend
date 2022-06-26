@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import { useGetEmployeesQuery } from "../api/api";
+import { useMutation, useQuery } from "react-query";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import axios from "axios";
+import { useQueryClient } from "react-query";
+
+const { REACT_APP_API_URL: baseUrl } = process.env;
 
 export function useDefaultFilters() {
   return {
@@ -11,15 +15,21 @@ export function useDefaultFilters() {
 }
 
 export function useEmployees(filters = {}) {
+  const getEmployees = async () => {
+    const employees = await axios.get(`${baseUrl}/employees`);
+    return employees;
+  };
+
   const { sortBy, searchQuery, salesRange } = filters;
 
-  const { isFetching, data, refetch } = useGetEmployeesQuery();
+  const { data, isFetching, refetch } = useQuery("employees", getEmployees);
 
   let filteredEmployees = [];
 
   if (data) {
-    const { data: employees = [] } = data;
-    console.log({ data, employees });
+    const {
+      data: { data: employees },
+    } = data;
 
     filteredEmployees = [...employees];
 
@@ -43,13 +53,10 @@ export function useEmployees(filters = {}) {
       filteredEmployees = filteredEmployees.filter((el) => {
         const { totalSales } = el;
 
-        console.log({ salesRange });
-
         if (salesRange.includes("<"))
           return totalSales < +salesRange.split("<")[1];
 
         if (salesRange.includes(">")) {
-          console.log(salesRange.split(">")[0]);
           return totalSales > +salesRange.split(">")[1];
         }
 
@@ -99,5 +106,131 @@ export function useHeaderTitle() {
 
   return {
     title,
+  };
+}
+
+export function useAddEmployee(onSuccess = () => {}) {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: createEmployee,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useMutation(
+    (body) => {
+      return axios.post(`${baseUrl}/employees`, body);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("employees");
+        onSuccess();
+      },
+    }
+  );
+
+  return {
+    createEmployee,
+    isLoading,
+    isError,
+    isSuccess,
+    error,
+  };
+}
+
+export function useDeleteEmployee() {
+  const queryClient = useQueryClient();
+  const {
+    mutate: deleteEmployee,
+    isLoading,
+    isError,
+    error,
+  } = useMutation(
+    (id) => {
+      return axios.delete(`/employees/${id}`);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("employees");
+      },
+    }
+  );
+
+  return {
+    deleteEmployee,
+    isLoading,
+    isError,
+    error,
+  };
+}
+
+export function useGetTotalSales() {
+  const { isFetching, data } = useQuery("total-sales", () => {
+    return axios.get("/analytics/total-sales");
+  });
+
+  return {
+    isFetching,
+    totalSales: data?.data?.data?.sumOfSales,
+  };
+}
+
+export function useMe() {
+  const { data, isFetching } = useQuery("me", () => {
+    return axios.get("/users/me");
+  });
+
+  return {
+    data: data?.data,
+    isFetching,
+  };
+}
+
+export function useLogin() {
+  const queryClient = useQueryClient();
+
+  const history = useHistory();
+
+  const { mutate: login, isLoading } = useMutation(
+    (body) => {
+      return axios.post("/users/login", body);
+    },
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("me");
+        localStorage.setItem("token", data.data.token);
+        history.replace("/");
+      },
+    }
+  );
+
+  return {
+    login,
+    isLoading,
+  };
+}
+
+export function useSignup() {
+  const queryClient = useQueryClient();
+  const {
+    mutate: signup,
+    isLoading,
+    error,
+  } = useMutation(
+    (body) => {
+      return axios.post("/users/sign-up", body);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("me");
+      },
+    }
+  );
+
+  return {
+    signup,
+    isLoading,
+    error,
   };
 }

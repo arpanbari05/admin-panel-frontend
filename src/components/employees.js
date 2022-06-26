@@ -1,11 +1,14 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useState } from "react";
 import { Redirect } from "react-router-dom";
 import "styled-components/macro";
-import { useDeleteEmployeeMutation } from "../api/api";
 import { CircularProgress } from "@mui/material";
 import { MdDelete } from "react-icons/md";
 import Filters from "./filters";
-import { useDefaultFilters, useEmployees } from "../customHooks";
+import {
+  useDefaultFilters,
+  useDeleteEmployee,
+  useEmployees,
+} from "../customHooks";
 import { MatButton } from ".";
 import { amount } from "../helper";
 
@@ -91,7 +94,7 @@ export function EmployeeItem({
   deleteHead,
   head = false,
 }) {
-  const [deleteEmployee, { isLoading }] = useDeleteEmployeeMutation();
+  const { deleteEmployee, isLoading } = useDeleteEmployee();
 
   const handleDeleteEmployee = () => {
     deleteEmployee(id);

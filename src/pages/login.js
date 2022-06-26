@@ -9,6 +9,7 @@ import loginImage from "../assets/login.svg";
 import Avatar from "@mui/material/Avatar";
 import { useHistory } from "react-router-dom";
 import { MatButton } from "../components";
+import { useLogin } from "../customHooks";
 
 const loginFields = [
   {
@@ -49,7 +50,8 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const [login, { isLoading, error }] = useLoginMutation();
+  // const [login, { isLoading, error }] = useLoginMutation();
+  const { login, isLoading, error } = useLogin();
 
   const history = useHistory();
 

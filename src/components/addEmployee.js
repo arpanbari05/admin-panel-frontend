@@ -1,11 +1,10 @@
 import { TextField } from "@mui/material";
 import React, { memo } from "react";
 import { useForm } from "react-hook-form";
-import { useCreateEmployeeMutation } from "../api/api";
 import "styled-components/macro";
 import { Link } from "react-router-dom";
 import { MatButton, Toast } from ".";
-import { useToggle } from "../customHooks";
+import { useAddEmployee, useToggle } from "../customHooks";
 import { IoIosArrowRoundForward } from "react-icons/io";
 
 const AddEmployeeFields = [
@@ -57,17 +56,17 @@ function AddEmployee() {
     formState: { errors },
   } = useForm();
 
-  const [createEmployee, { isLoading, isSuccess, isError, error }] =
-    useCreateEmployeeMutation();
-
   const toast = useToggle();
+
+  const { createEmployee, isLoading, isSuccess, isError, error } =
+    useAddEmployee(() => {
+      toast.handleOpen();
+    });
 
   const onSubmit = (data) => {
     reset();
     setFocus("name");
-    createEmployee({ ...data }).then(() => {
-      toast.handleOpen();
-    });
+    createEmployee({ ...data }).then();
   };
 
   const status = isSuccess ? "success" : isError ? "error" : "info";

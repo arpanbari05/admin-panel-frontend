@@ -1,15 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useEmployees } from "../customHooks";
+import { useEmployees, useGetTotalSales } from "../customHooks";
 import { EmployeeItem } from "./employees";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { useGetTotalSalesQuery } from "../api/api";
 import { amount } from "../helper";
 
 function Summary() {
-  const { data, isFetching } = useGetTotalSalesQuery();
-
-  const totalSales = data?.data?.sumOfSales;
+  // const { data, isFetching } = useGetTotalSalesQuery();
+  const { totalSales, isFetching } = useGetTotalSales();
 
   return (
     <div className="flex flex-col sm:flex-row gap-6 mt-6">
