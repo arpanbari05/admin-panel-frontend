@@ -64,7 +64,7 @@ function Login() {
 
   const getReqError = (name) => {
     if (name === "email" && error) {
-      return error.data?.message;
+      return error.response?.data.message;
     }
   };
 

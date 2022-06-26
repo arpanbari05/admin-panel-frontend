@@ -192,7 +192,7 @@ export function useLogin() {
 
   const history = useHistory();
 
-  const { mutate: login, isLoading } = useMutation(
+  const { mutate: login, isLoading, error } = useMutation(
     (body) => {
       return axios.post("/users/login", body);
     },
@@ -208,6 +208,7 @@ export function useLogin() {
   return {
     login,
     isLoading,
+    error
   };
 }
 
